@@ -52,10 +52,12 @@ void getKeyPress()
 			switch (_getch())
 			{
 			case 114:
-				randomCell();
+				if (!run)
+					randomCell();
 				break;
 			case 99:
-				initData();
+				if (!run)
+					initData();
 				break;
 			case 32:run = !run;
 				break;
@@ -69,15 +71,18 @@ void getMouseMsg()
 {
 	while (true)
 	{
-		msg = GetMouseMsg();
-		switch (msg.uMsg)
+		if (!run)
 		{
-		case WM_LBUTTONDOWN:
-			setCell(msg.x / CELL_SIZE, msg.y / CELL_SIZE, 1);
-			break;
-		case WM_RBUTTONDOWN:
-			setCell(msg.x / CELL_SIZE, msg.y / CELL_SIZE, 0);
-			break;
+			msg = GetMouseMsg();
+			switch (msg.uMsg)
+			{
+			case WM_LBUTTONDOWN:
+				setCell(msg.x / CELL_SIZE, msg.y / CELL_SIZE, 1);
+				break;
+			case WM_RBUTTONDOWN:
+				setCell(msg.x / CELL_SIZE, msg.y / CELL_SIZE, 0);
+				break;
+			}
 		}
 	}
 }
@@ -165,6 +170,7 @@ void initData()
 			cell[i][j] = 0;
 		}
 	}
+	update();
 }
 
 void updateCell(int x, int y, int tag)
