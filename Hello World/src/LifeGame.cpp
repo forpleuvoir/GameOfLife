@@ -4,6 +4,8 @@
 #include <thread>
 #include <conio.h>
 
+#define random(x) rand() % x;
+
 const int CELL_SIZE = 10;
 const int WIDTH = 100;
 const int HEIGHT = 80;
@@ -38,7 +40,7 @@ void start()
 
 void initWindows()
 {
-	initgraph(WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE, EW_SHOWCONSOLE);
+	initgraph(WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
 }
 
 void getKeyPress()
@@ -70,9 +72,6 @@ void getMouseMsg()
 		msg = GetMouseMsg();
 		switch (msg.uMsg)
 		{
-		case WM_MOUSEMOVE:
-			putpixel(msg.x, msg.y, RED);
-			break;
 		case WM_LBUTTONDOWN:
 			setCell(msg.x / CELL_SIZE, msg.y / CELL_SIZE, 1);
 			break;
@@ -96,9 +95,10 @@ void randomCell()
 	{
 		for (int j = 0; j < HEIGHT; j++)
 		{
-			cell[i][j] = rand() % 2;
+			cell[i][j] = random(2);
 		}
 	}
+	draw();
 }
 
 void update()
@@ -116,7 +116,8 @@ void update()
 
 void draw()
 {
-	//cleardevice();
+	IMAGE img(WIDTH * CELL_SIZE, HEIGHT * CELL_SIZE);
+	SetWorkingImage(&img);
 	for (int i = 0; i < WIDTH; i++)
 	{
 		for (int j = 0; j < HEIGHT; j++)
@@ -125,6 +126,8 @@ void draw()
 		}
 	}
 	drawBackground();
+	SetWorkingImage();
+	putimage(0, 0, &img);
 }
 
 void drawCell(int x, int y, int tag)
@@ -145,11 +148,11 @@ void drawBackground()
 	setlinecolor(0xD3D3D3);
 	for (int i = 0; i < WIDTH; i++)
 	{
-		line(i * CELL_SIZE, 0, i * CELL_SIZE, WIDTH * CELL_SIZE);
+		line(i * CELL_SIZE, 0, i * CELL_SIZE, HEIGHT * CELL_SIZE);
 	}
 	for (int j = 0; j < HEIGHT; j++)
 	{
-		line(0, j * CELL_SIZE, HEIGHT * CELL_SIZE, j * CELL_SIZE);
+		line(0, j * CELL_SIZE, WIDTH * CELL_SIZE, j * CELL_SIZE);
 	}
 }
 
