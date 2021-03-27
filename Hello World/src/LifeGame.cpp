@@ -6,10 +6,12 @@
 
 #define random(x) rand() % x;
 
-const int CELL_SIZE = 10;
+const int CELL_SIZE = 8;
 const int WIDTH = 100;
-const int HEIGHT = 80;
-const int TPS = 50;
+const int HEIGHT = 100;
+const int TPS = 20;
+const int MAX_MSPT = 1000 / TPS;
+int mspt = 0;
 bool run = true;
 int cell[WIDTH][HEIGHT] = { {0} };
 int temp[WIDTH][HEIGHT] = { {0} };
@@ -27,12 +29,22 @@ int main()
 
 void start()
 {
+	int time_start;
+	int time_end;
 	while (true)
 	{
 		if (run)
 		{
-			Sleep(1000 / TPS);
+			time_start = GetTickCount();
+			//Sleep(1000 / TPS);
 			update();
+			time_end = GetTickCount();
+			mspt = time_end - time_start;
+			if (mspt < MAX_MSPT)
+			{
+
+				Sleep(MAX_MSPT - mspt);
+			}
 		}
 	}
 }
@@ -159,6 +171,9 @@ void drawBackground()
 	{
 		line(0, j * CELL_SIZE, WIDTH * CELL_SIZE, j * CELL_SIZE);
 	}
+	TCHAR s[10];
+	swprintf_s(s, _T("mspt:%d"), mspt);
+	outtextxy(0, 0, s);
 }
 
 void initData()
